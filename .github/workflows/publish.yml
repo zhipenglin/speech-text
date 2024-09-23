@@ -5,11 +5,9 @@ on:
 jobs:
   build:
     if: github.event.pull_request.merged == true
-    uses: kne-union/actions/.github/workflows/publish-libs-workflow.yml@master
-    secrets: inherit
-    with:
-      package_name: '@kne/use-resize'
-      example_package_name: '@kne-components/use-resize'
+    steps:
+      - run: npm i && npm run init
+      - run: npm run build
   deploy:
     needs: build
     steps:
