@@ -1,32 +1,25 @@
 import axios from 'axios';
+import Recorder from 'recorder-core';
+import 'recorder-core/recorder.wav.min';
 
 const record = async () => {
-    const stream = await window.navigator.mediaDevices.getUserMedia({audio: true}).catch((e) => {
-        alert('出错，请确保已允许浏览器获取录音权限');
-        throw e;
+    const rec = Recorder({
+        type: "wav", sampleRate: 16000, bitRate: 16
     });
-    const recorder = new window.MediaRecorder(stream);
-
-    let chunks = [];
-    const events = [['start', () => {
-        chunks = [];
-    }], ['dataavailable', (e) => {
-        chunks.push(e.data);
-    }]];
-    events.forEach(([name, handler]) => recorder.addEventListener(name, handler));
     return {
-        start: () => {
-            recorder.start(1000);
-        },
-        stop: async () => {
-            events.forEach(([name, handler]) => recorder.removeEventListener(name, handler));
-            stream.getTracks().forEach(track => track.stop());
-            const blob = new Blob(chunks, {type: 'audio/wav;codecs=opus'});
-            const file = new File([blob], 'audio.wav', {type: 'audio/wav'});
-            const res = await axios.postForm({
-                url: '', data: {file}
+        start: async () => {
+            await new Promise((resolve, reject) => {
+                rec.open(resolve, reject);
             });
-            return {file, res};
+            rec.start();
+        }, stop: async () => {
+            const file = await new Promise((resolve, reject) => {
+                rec.stop((blob) => {
+                    resolve(new File([blob], 'audio.wav', {type: 'audio/wav'}));
+                }, reject);
+            });
+            rec.close();
+            return await axios.postForm('/action/papi/ai/vCMA01/uploadWavFile', {file});
         }
     };
 };
