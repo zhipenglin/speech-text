@@ -44,6 +44,7 @@ const BaseExample = () => {
         <div>
             <Button onClick={() => {
                 recordRef.current.then(async ({start, stop}) => {
+                    setMessage({type: 'warning', message: '正在识别，请稍等'});
                     if (recording) {
                         const {data} = await stop();
                         if (data.code === 200) {
@@ -52,6 +53,7 @@ const BaseExample = () => {
                             setMessage({type: 'error', message: '转换错误'});
                         }
                     } else {
+                        setMessage({type: 'warning', message: '开始语音识别'});
                         start();
                     }
                     setRecording(!recording);
