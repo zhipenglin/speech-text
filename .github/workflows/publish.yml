@@ -11,8 +11,8 @@ jobs:
       package_name: '@kne/use-resize'
       example_package_name: '@kne-components/use-resize'
   deploy:
-    needs: build
     uses: peaceiris/actions-gh-pages@v4
+    needs: build
     with:
       github_token: ${{ secrets.GITHUB_TOKEN }}
       publish_dir: ./example/build
