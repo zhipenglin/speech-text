@@ -50,7 +50,7 @@
   "bugs": {
     "url": "https://github.com/kne-union/speech-demo/issues"
   },
-  "homepage": "https://www.kne-union.top/#/libs/SpeechDemo",
+  "homepage": "https://zhipenglin.github.io/speech-demo/",
   "eslintConfig": {
     "extends": [
       "react-app",
