@@ -4,7 +4,6 @@ on:
     branches: [ master ]
 jobs:
   build:
-    if: github.event.pull_request.merged == true
     steps:
       - run: npm i && npm run init
       - run: npm run build
