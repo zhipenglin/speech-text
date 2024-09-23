@@ -4,6 +4,7 @@ on:
     branches: [ master ]
 jobs:
   build:
+    runs-on: ubuntu-latest
     steps:
       - run: npm i && npm run init
       - run: npm run build
