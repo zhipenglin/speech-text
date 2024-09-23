@@ -9,6 +9,7 @@ jobs:
       - run: npm i && npm run init
       - run: npm run build
   deploy:
+    runs-on: ubuntu-latest
     needs: build
     steps:
       - uses: peaceiris/actions-gh-pages@v4
