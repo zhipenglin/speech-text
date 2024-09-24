@@ -1,11 +1,11 @@
 
-# speech-demo
+# speech-text
 
 
 ### 安装
 
 ```shell
-npm i --save @kne/speech-demo
+npm i --save @kne-components/speech-text
 ```
 
 ### 示例
@@ -25,10 +25,10 @@ npm i --save @kne/speech-demo
 
 - 这里填写示例标题
 - 这里填写示例说明
-- _SpeechDemo(@kne/current-lib_speech-demo),antd(antd)
+- _SpeechText(@kne/current-lib_speech-text),antd(antd)
 
 ```jsx
-const {default: record} = _SpeechDemo;
+const {default: SpeechText} = _SpeechText;
 const {Button, Alert, Flex} = antd;
 const {useState, useEffect, useRef} = React;
 
@@ -37,7 +37,7 @@ const BaseExample = () => {
     const [recording, setRecording] = useState(false);
     const recordRef = useRef(null);
     useEffect(() => {
-        recordRef.current = record();
+        recordRef.current = SpeechText({url: 'https://ct.deeperagi.com/action/papi/ai/vCMA01/uploadWavFile'});
     }, []);
     return <Flex vertical gap={10}>
         <Alert type={message.type} message={message.message}/>
@@ -70,7 +70,41 @@ render(<BaseExample/>);
 
 ### API
 
-| 属性名 | 说明 | 类型 | 默认值 |
-|-----|----|----|-----|
-|     |    |    |     |
+#### 默认导出 speech(options):Promise
+
+example:
+
+```javascript
+const {start, stop} = await speech(options);
+```
+
+#### options:Object
+
+| 属性名 | 说明             | 类型     | 默认值 |
+|-----|----------------|--------|-----|
+| url | 上传文件语音识别目标接口地址 | string | -   |
+
+#### 开始录音 start():Promise
+
+example:
+
+```javascript
+await start();
+```
+
+#### 结束录音 stop():Promise
+
+example:
+
+```javascript
+const response = await stop();
+const {code, message} = response.data;
+```
+
+| 属性名     | 说明               | 类型     | 默认值 |
+|---------|------------------|--------|-----|
+| code    | 后端接口返回状态值,200为成功 | number | -   |
+| message | 语音转换结果           | string | -   |
+
+
 

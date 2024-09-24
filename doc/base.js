@@ -1,4 +1,4 @@
-const {default: record} = _SpeechDemo;
+const {default: SpeechText} = _SpeechText;
 const {Button, Alert, Flex} = antd;
 const {useState, useEffect, useRef} = React;
 
@@ -7,7 +7,7 @@ const BaseExample = () => {
     const [recording, setRecording] = useState(false);
     const recordRef = useRef(null);
     useEffect(() => {
-        recordRef.current = record();
+        recordRef.current = SpeechText({url: 'https://ct.deeperagi.com/action/papi/ai/vCMA01/uploadWavFile'});
     }, []);
     return <Flex vertical gap={10}>
         <Alert type={message.type} message={message.message}/>

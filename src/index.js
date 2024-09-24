@@ -2,7 +2,8 @@ import axios from 'axios';
 import Recorder from 'recorder-core';
 import 'recorder-core/recorder.wav.min';
 
-const record = async () => {
+const record = async (options) => {
+    const {url} = Object.assign({}, options);
     const rec = Recorder({
         type: "wav", sampleRate: 16000, bitRate: 16
     });
@@ -19,7 +20,7 @@ const record = async () => {
                 }, reject);
             });
             rec.close();
-            return await axios.postForm('https://ct.deeperagi.com/action/papi/ai/vCMA01/uploadWavFile', {file});
+            return await axios.postForm(url, {file});
         }
     };
 };
