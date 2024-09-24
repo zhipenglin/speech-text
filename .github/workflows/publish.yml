@@ -28,11 +28,19 @@ jobs:
             !./example
   publish:
     needs: build
-    uses: kne-union/actions/.github/workflows/publish-npm-workflow.yml@master
-    secrets: inherit
-    with:
-      package_name: '@kne-components/speech-text'
-      artifact: 'npm-dist'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: npm-dist
+          path: ./
+      - uses: actions/setup-node@v4
+        with:
+          registry-url: https://registry.npmjs.org/
+      - name: Publish Npm
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.KNE_PACKAGE_PUBLISH}}
+        run: npm publish --access=public
   deploy:
     runs-on: ubuntu-latest
     needs: build
