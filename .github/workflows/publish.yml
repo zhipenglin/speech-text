@@ -27,6 +27,7 @@ jobs:
             !./.github
             !./package-lock.json
             !./doc
+            !./example
   publish:
     runs-on: ubuntu-latest
     needs: build
