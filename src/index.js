@@ -19,7 +19,7 @@ const record = async () => {
                 }, reject);
             });
             rec.close();
-            return await axios.postForm('http://ct.deeperagi.com/action/papi/ai/vCMA01/uploadWavFile', {file});
+            return await axios.postForm('https://ct.deeperagi.com/action/papi/ai/vCMA01/uploadWavFile', {file});
         }
     };
 };
