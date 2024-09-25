@@ -57,8 +57,12 @@ jobs:
           publish_dir: ./
   release:
     needs: publish
-    uses: kne-union/actions/.github/workflows/npm-release-workflow.yml@master
-    secrets: inherit
-    with:
-      package_name: '@kne-components/speech-text'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "VERSION=$(npx @kne/npm-tools latestVersion '@kne-components/speech-text' | tail -1)" >> "$GITHUB_ENV"
+      - uses: ncipollo/release-action@v1
+        with:
+          tag: ${{env.VERSION}}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
