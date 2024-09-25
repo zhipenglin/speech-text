@@ -1,6 +1,6 @@
 {
   "name": "@kne-components/speech-text",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "",
   "syntax": {
     "esmodules": true
@@ -42,15 +42,15 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kne-union/speech-demo.git"
+    "url": "git+https://github.com/kne-union/speech-text.git"
   },
   "keywords": [],
   "author": "linzp",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/kne-union/speech-demo/issues"
+    "url": "https://github.com/kne-union/speech-text/issues"
   },
-  "homepage": "https://zhipenglin.github.io/speech-demo/",
+  "homepage": "https://zhipenglin.github.io/speech-text/",
   "eslintConfig": {
     "extends": [
       "react-app",
