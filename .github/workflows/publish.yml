@@ -58,6 +58,8 @@ jobs:
   release:
     needs: publish
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - run: echo "VERSION=$(npx @kne/npm-tools latestVersion '@kne-components/speech-text' | tail -1)" >> "$GITHUB_ENV"
