@@ -60,6 +60,7 @@ const realtime = async (options) => {
                 });
             });
             const stream = await window.navigator.mediaDevices.getUserMedia({audio: true}).catch((e) => {
+                alert('获取麦克风权限失败，请刷新后重试');
                 throw e;
             });
             const recorder = new window.MediaRecorder(stream);
