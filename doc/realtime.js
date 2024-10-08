@@ -1,5 +1,6 @@
-const {default: speech} = _SpeechText;
+const {speechTextRealTime} = _SpeechText;
 const {Button, Alert, Flex} = antd;
+const {default: axios} = _axios;
 const {useState, useEffect, useRef} = React;
 
 const BaseExample = () => {
@@ -7,8 +8,27 @@ const BaseExample = () => {
     const [recording, setRecording] = useState(false);
     const recordRef = useRef(null);
     useEffect(() => {
-        recordRef.current = speech({url: 'https://ct.deeperagi.com/action/papi/ai/vCMA01/uploadWavFile'});
+        recordRef.current = speechTextRealTime({
+            getToken: async () => {
+                const {data} = await axios({
+                    url: 'https://ct.deeperagi.com/action/papi/ai/vCMA02/createToken',
+                    method: 'POST',
+                    data: JSON.stringify({
+                        "avgtype": "11111"
+                    }),
+                    headers: {
+                        'content-type': 'application/json'
+                    }
+                });
+                return {
+                    token: data.token, appKey: data.appKey
+                };
+            }, onChange: ({message}) => {
+                setMessage({type: 'success', message});
+            }
+        });
     }, []);
+
     return <Flex vertical gap={10}>
         <Alert type={message.type} message={message.message}/>
         <div>
@@ -16,12 +36,8 @@ const BaseExample = () => {
                 recordRef.current.then(async ({start, stop}) => {
                     setMessage({type: 'warning', message: '正在识别，请稍等'});
                     if (recording) {
-                        const {data} = await stop();
-                        if (data.code === 200) {
-                            setMessage({type: 'success', message: data.message || '未识别到语音内容'});
-                        } else {
-                            setMessage({type: 'error', message: '转换错误'});
-                        }
+                        await stop();
+                        setMessage({type: 'info', message: '识别结束'});
                     } else {
                         setMessage({type: 'warning', message: '开始语音识别'});
                         start();

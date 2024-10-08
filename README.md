@@ -8,7 +8,7 @@
 npm i --save @kne-components/speech-text
 ```
 
-### 示例
+### 示例(全屏)
 
 
 #### 示例样式
@@ -23,12 +23,12 @@ npm i --save @kne-components/speech-text
 
 #### 示例代码
 
-- 这里填写示例标题
-- 这里填写示例说明
-- _SpeechText(@kne/current-lib_speech-text),antd(antd)
+- 录音文件上传识别
+- 录音文件上传识别
+- _SpeechText(@kne/current-lib_speech-text)[import * as _SpeechText from "@kne-components/speech-text"],antd(antd)
 
 ```jsx
-const {default: SpeechText} = _SpeechText;
+const {default: speech} = _SpeechText;
 const {Button, Alert, Flex} = antd;
 const {useState, useEffect, useRef} = React;
 
@@ -37,7 +37,7 @@ const BaseExample = () => {
     const [recording, setRecording] = useState(false);
     const recordRef = useRef(null);
     useEffect(() => {
-        recordRef.current = SpeechText({url: 'https://ct.deeperagi.com/action/papi/ai/vCMA01/uploadWavFile'});
+        recordRef.current = speech({url: 'https://ct.deeperagi.com/action/papi/ai/vCMA01/uploadWavFile'});
     }, []);
     return <Flex vertical gap={10}>
         <Alert type={message.type} message={message.message}/>
@@ -67,10 +67,72 @@ render(<BaseExample/>);
 
 ```
 
+- 实时语音识别
+- 实时语音识别
+- _SpeechText(@kne/current-lib_speech-text)[import * as _SpeechText from "@kne-components/speech-text"],antd(antd),_axios(axios)
+
+```jsx
+const {speechTextRealTime} = _SpeechText;
+const {Button, Alert, Flex} = antd;
+const {default: axios} = _axios;
+const {useState, useEffect, useRef} = React;
+
+const BaseExample = () => {
+    const [message, setMessage] = useState({type: 'info', message: '尚未开始'});
+    const [recording, setRecording] = useState(false);
+    const recordRef = useRef(null);
+    useEffect(() => {
+        recordRef.current = speechTextRealTime({
+            getToken: async () => {
+                const {data} = await axios({
+                    url: 'https://ct.deeperagi.com/action/papi/ai/vCMA02/createToken',
+                    method: 'POST',
+                    data: JSON.stringify({
+                        "avgtype": "11111"
+                    }),
+                    headers: {
+                        'content-type': 'application/json'
+                    }
+                });
+                return {
+                    token: data.token, appKey: data.appKey
+                };
+            }, onChange: ({message}) => {
+                setMessage({type: 'success', message});
+            }
+        });
+    }, []);
+
+    return <Flex vertical gap={10}>
+        <Alert type={message.type} message={message.message}/>
+        <div>
+            <Button onClick={() => {
+                recordRef.current.then(async ({start, stop}) => {
+                    setMessage({type: 'warning', message: '正在识别，请稍等'});
+                    if (recording) {
+                        await stop();
+                        setMessage({type: 'info', message: '识别结束'});
+                    } else {
+                        setMessage({type: 'warning', message: '开始语音识别'});
+                        start();
+                    }
+                    setRecording(!recording);
+                });
+            }}>{recording ? '正在录制' : '点击开始'}</Button>
+        </div>
+    </Flex>;
+};
+
+render(<BaseExample/>);
+
+```
+
 
 ### API
 
 #### 默认导出 speech(options):Promise
+
+上传语音文件识别
 
 example:
 
@@ -106,5 +168,46 @@ const {code, message} = response.data;
 | code    | 后端接口返回状态值,200为成功 | number | -   |
 | message | 语音转换结果           | string | -   |
 
+### speechTextRealTime(options):Promise
 
+实时语音识别
+
+example:
+
+```javascript
+const {start, stop} = await speechTextRealTime(options);
+```
+
+#### options:Object
+
+| 属性名           | 说明                                                         | 类型       | 默认值                                    |
+|---------------|------------------------------------------------------------|----------|----------------------------------------|
+| getToken      | 获取Token方法:getToken():{token,appKey}                        | function | -                                      |
+| onChange      | 识别文本内容发生变化时回调函数                                            | function | ({message}) => {console.log(message);} |
+| getGatewayUrl | 获取WebSocket的url地址: getGatewayUrl({token}):url,可以获取到token参数 | function | -                                      |
+| onComplete    | 录音结束回调方法                                                   | function | -                                      |
+| url           | 保存录音文件url                                                  | string   | -                                      |
+
+#### 开始录音 start():Promise
+
+example:
+
+```javascript
+await start({
+    getToken: () => {
+    },
+    onChange: ({message}) => {
+    },
+    onComplete: ({file, taskId, messageId, message, chunks}) => {
+    }
+});
+```
+
+#### 结束录音 stop():Promise
+
+example:
+
+```javascript
+await stop();
+```
 
