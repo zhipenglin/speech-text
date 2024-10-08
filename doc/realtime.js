@@ -10,19 +10,25 @@ const BaseExample = () => {
     useEffect(() => {
         recordRef.current = speechTextRealTime({
             getToken: async () => {
-                const {data} = await axios({
-                    url: 'https://ct.deeperagi.com/action/papi/ai/vCMA02/createToken',
-                    method: 'POST',
-                    data: JSON.stringify({
-                        "avgtype": "11111"
-                    }),
-                    headers: {
-                        'content-type': 'application/json'
-                    }
-                });
-                return {
-                    token: data.token, appKey: data.appKey
-                };
+                try {
+                    const {data} = await axios({
+                        url: 'https://ct.deeperagi.com/action/papi/ai/vCMA02/createToken',
+                        method: 'POST',
+                        data: JSON.stringify({
+                            "avgtype": "11111"
+                        }),
+                        headers: {
+                            'content-type': 'application/json'
+                        }
+                    });
+                    return {
+                        token: data.token, appKey: data.appKey
+                    };
+                } catch (e) {
+                    return {
+                        "appKey": "TYcsiL5CZb9hd9DR", "token": "e80b7d7f6f054f91a79a14a67cb7f34c"
+                    };
+                }
             }, onChange: ({message}) => {
                 setMessage({type: 'success', message});
             }
